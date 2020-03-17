@@ -45,9 +45,6 @@ void Clock::increment(unsigned long updateTime) {
 }
 
 byte Clock::getHourTens() {
-  if ((is12hr) && (hour > 12)){
-    return hour - 12;  
-  }
   return hourTens;  
 }
 
@@ -81,8 +78,15 @@ void Clock::setMinuteOnes(byte _minuteOnes) {
 
 byte Clock::getHour() {
   if ((is12hr) && (hour > 12)){
-    return hour - 12;  
+	return hour - 12;		
   }
+  if (hour == 0){
+	return 12;
+  }
+  
+  hourTens = hour / 10;
+  hourOnes = hour % 10;
+  
   return hour;  
 }
 
@@ -104,10 +108,11 @@ void Clock::setMinute(byte _minute) {
   minute = _minute; 
   minuteTens = minute / 10;
   minuteOnes = minute % 10;
-  
+ /* 
   Serial.print(minuteTens);
   Serial.print(" : ");
   Serial.println(minuteOnes);
+  */
   
 }
 
