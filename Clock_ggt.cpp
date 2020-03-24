@@ -9,9 +9,6 @@
 #endif
 
 Clock::Clock() {
-  minuteChanged = false;
-  hourChanged = false;
-    //RTC.begin();
 }
 
 void Clock::increment(unsigned long updateTime) {
@@ -38,9 +35,8 @@ void Clock::increment(unsigned long updateTime) {
           }
         }
       }
-      
     }
-    previousMillisClockUpdate = currentMillis;
+	previousMillisClockUpdate = currentMillis;
   }
 }
 
@@ -77,37 +73,29 @@ void Clock::setMinuteOnes(byte _minuteOnes) {
 }
 
 byte Clock::getHour() {
-  if ((is12hr) && (hour > 12)){
-	return hour - 12;		
+  if ((is12hr) && (hourTens > 0) && (hourOnes > 2)){
+	hourTens = hourTens - 1;
+	hourOnes = hourOnes - 2;
   }
-  if (hour == 0){
-	return 12;
+  if ((hourTens == 0) && (hourOnes == 0)){
+	hourTens = 1;
+	hourOnes = 2;		
   }
-  
-  hourTens = hour / 10;
-  hourOnes = hour % 10;
-  
-  return hour;  
+  return hourTens * 10 + hourOnes;
 }
 
 byte Clock::getMinute() {
-  return minute;  
-}
-
-byte Clock::getSecond() {
-  return second;  
+  return minuteTens * 10 + minuteOnes;  
 }
 
 void Clock::setHour(byte _hour) {
-  hour = _hour;
-  hourTens = hour / 10;
-  hourOnes = hour % 10;
+  hourTens = _hour / 10;
+  hourOnes = _hour % 10;
 }
 
 void Clock::setMinute(byte _minute) {
-  minute = _minute; 
-  minuteTens = minute / 10;
-  minuteOnes = minute % 10;
+  minuteTens = _minute / 10;
+  minuteOnes = _minute % 10;
  /* 
   Serial.print(minuteTens);
   Serial.print(" : ");
@@ -115,11 +103,12 @@ void Clock::setMinute(byte _minute) {
   */
   
 }
-
+/*
 void Clock::setSecond(byte _second) {
   second = _second;  
 }
-
+*/
+/*
 void Clock::incrementDigit(int digitFocus, int increment) {
   int i;
   int j;
@@ -193,7 +182,7 @@ void Clock::incrementDigit(int digitFocus, int increment) {
     break;
   }
 }
-
+*/
 void Clock::set12hr() {
   is12hr = true;  
 }

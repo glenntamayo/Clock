@@ -7,9 +7,6 @@ class Clock {
     byte minuteTens = 0;
     byte hourOnes = 8;
     byte hourTens = 0;
-    byte hour;
-    byte minute;
-    byte second;
 
     bool is12hr = false;
 
@@ -17,10 +14,6 @@ class Clock {
     
   public:
     Clock();
-
-    bool minuteChanged;
-    bool hourChanged;
-    void incrementDigit(int, int);
 
     byte getHourTens();
     byte getHourOnes();
@@ -36,8 +29,7 @@ class Clock {
     byte getSecond();
     void setHour(byte);
     void setMinute(byte);
-    void setSecond(byte);
-
+    
     void set12hr();
 
     void increment(unsigned long);
