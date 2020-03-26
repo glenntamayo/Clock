@@ -73,9 +73,17 @@ void Clock::setMinuteOnes(byte _minuteOnes) {
 }
 
 byte Clock::getHour() {
-  if ((is12hr) && (hourTens > 0) && (hourOnes > 2)){
-	hourTens = hourTens - 1;
-	hourOnes = hourOnes - 2;
+  if (is12hr){
+	if((hourTens == 1)){
+	  if(hourOnes > 2) {
+		hourTens = hourTens - 1;
+		hourOnes = hourOnes - 2;
+	  }
+	}
+	if((hourTens == 2)){
+	  hourTens = hourTens - 1;
+	  hourOnes = hourOnes - 2;
+	}
   }
   if ((hourTens == 0) && (hourOnes == 0)){
 	hourTens = 1;
