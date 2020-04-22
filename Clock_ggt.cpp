@@ -14,29 +14,21 @@ Clock::Clock() {
 void Clock::increment(unsigned long updateTime) {
   unsigned long currentMillis = millis();
   if ((currentMillis - previousMillisClockUpdate) > updateTime) {
-      
-    if (minuteOnes < 9) {
-      minuteOnes++;
+    byte _hour = hourTens * 10 + hourOnes;
+		byte _minute = minuteTens * 10 + minuteOnes;
+    if (_minute < 59) {
+      _minute++;
     } else {
-      minuteOnes = 0;
-      if (minuteTens < 5) {
-        minuteTens++;
-      } else {
-        minuteTens = 0;
-        if (hourTens == 1 && hourOnes == 2) {
-          hourOnes = 1;
-          hourTens = 0;
-        } else {      
-          if (hourOnes < 9) {
-            hourOnes++; 
-          } else {
-            hourOnes = 0;
-            hourTens = 1;
-          }
-        }
-      }
+			_minute = 0;	  
+			if (_hour < 23) {
+				_hour++;
+			} else {      
+				_hour = 0;
+			}
     }
-	previousMillisClockUpdate = currentMillis;
+		setHour(_hour);
+		setMinute(_minute);
+		previousMillisClockUpdate = currentMillis;
   }
 }
 
@@ -73,23 +65,18 @@ void Clock::setMinuteOnes(byte _minuteOnes) {
 }
 
 byte Clock::getHour() {
+  byte _hour = hourTens * 10 + hourOnes;
   if (is12hr){
-	if((hourTens == 1)){
-	  if(hourOnes > 2) {
-		hourTens = hourTens - 1;
-		hourOnes = hourOnes - 2;
-	  }
-	}
-	if((hourTens == 2)){
-	  hourTens = hourTens - 1;
-	  hourOnes = hourOnes - 2;
-	}
+		if (_hour == 0){
+			return 12;		
+		}else if(_hour > 12){
+			return _hour -12;
+		} else {
+			return _hour;
+		}
+  } else{
+	return _hour;
   }
-  if ((hourTens == 0) && (hourOnes == 0)){
-	hourTens = 1;
-	hourOnes = 2;		
-  }
-  return hourTens * 10 + hourOnes;
 }
 
 byte Clock::getMinute() {
@@ -103,94 +90,9 @@ void Clock::setHour(byte _hour) {
 
 void Clock::setMinute(byte _minute) {
   minuteTens = _minute / 10;
-  minuteOnes = _minute % 10;
- /* 
-  Serial.print(minuteTens);
-  Serial.print(" : ");
-  Serial.println(minuteOnes);
-  */
-  
+  minuteOnes = _minute % 10;  
 }
-/*
-void Clock::setSecond(byte _second) {
-  second = _second;  
-}
-*/
-/*
-void Clock::incrementDigit(int digitFocus, int increment) {
-  int i;
-  int j;
-  switch (digitFocus) {
-  case 0:
-    i = minuteOnes + increment;
-    switch (i) {
-    case -1:
-      minuteOnes = 9;
-      break;
-    case 10:
-      minuteOnes = 0;
-      break;
-    default:  
-      minuteOnes = i;
-    }
-    minuteChanged = true;
-    break;
-  case 1:
-    i = minuteTens + 1;
-    switch (i) {
-    case -1:
-      minuteTens = 5;
-      break;
-    case 6:
-      minuteTens = 0;
-      break;
-    default:
-      minuteTens = i;
-    }
-    minuteChanged = true;
-    break;
-  case 2:
-    i = hourOnes + increment;
-    j = hourTens;
-    switch (j) {
-    case 0:
-      switch (i) {
-      case 0:
-        hourOnes = 2;
-        hourTens = 1;
-        break;
-      case 10:
-        hourOnes = 0;
-        hourTens = 1;
-        break;
-      default:
-        hourOnes = i;
-      }
-      break;
-    case 1:
-      switch (i) {
-      case -1:
-        hourOnes = 9;
-        hourTens = 0;
-        break;
-      case 0:
-        hourOnes = 0;
-        hourTens = 1;
-        break;
-      case 3:
-        hourOnes = 1;
-        hourTens = 0;
-        break;
-      default:
-        hourOnes = i;
-      }
-      break;
-    }
-    hourChanged = true;
-    break;
-  }
-}
-*/
+
 void Clock::set12hr() {
   is12hr = true;  
 }
